@@ -1,11 +1,7 @@
 import StudioTray from "./components/global/StudioTray";
 
 function StudioApp() {
-  return (
-    <div>
-      <StudioTray />
-    </div>
-  );
+  return <StudioTray />;
 }
 
 export default StudioApp;

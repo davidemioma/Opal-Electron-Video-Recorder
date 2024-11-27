@@ -20,7 +20,7 @@ const ControlLayout = ({ children, className }: Props) => {
   return (
     <div
       className={cn(
-        "bg-[#171717] draggable text-white border-2 border-neutral-700 flex flex-col h-full w-full px-1 overflow-hidden rounded-3xl",
+        "bg-[#171717] text-white border-2 border-neutral-700 flex flex-col h-full w-full px-1 overflow-hidden rounded-3xl",
         className,
         isVisible && "invisible"
       )}

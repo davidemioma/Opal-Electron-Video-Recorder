@@ -62,18 +62,15 @@ const MediaConfiguration = ({ profile, state }: Props) => {
 
       return toast.success(data.message);
     },
-    onError: (err) => {
-      return toast.error(err.message || "Something went wrong!");
-    },
   });
 
   const onSubmit = (values: StudioSettingsValidator) => {
-    if (!profile.data.studio?.id) return;
+    if (!profile.data.id) return;
 
-    mutate({ id: profile.data.studio?.id, values });
+    mutate({ id: profile.data.id, values });
 
     window.ipcRenderer.send("media-sources", {
-      id: profile.data.studio?.id,
+      id: profile.data.id,
       plan: profile.data.subscription?.plan,
       ...values,
     });

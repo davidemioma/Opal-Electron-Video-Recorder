@@ -39,7 +39,7 @@ function createWindow() {
     frame: false,
     hasShadow: false,
     transparent: true,
-    alwaysOnTop: true,
+    alwaysOnTop: false,
     focusable: false,
     icon: path.join(process.env.VITE_PUBLIC, "electron-vite.svg"),
     webPreferences: {
@@ -57,10 +57,10 @@ function createWindow() {
     maxHeight: 400,
     minWidth: 300,
     maxWidth: 400,
-    frame: false,
-    transparent: true,
-    alwaysOnTop: true,
-    focusable: false,
+    // frame: false,
+    // transparent: true,
+    // alwaysOnTop: false,
+    // focusable: false,
     icon: path.join(process.env.VITE_PUBLIC, "electron-vite.svg"),
     webPreferences: {
       preload: path.join(__dirname, "preload.mjs"),
@@ -77,10 +77,10 @@ function createWindow() {
     maxHeight: 400,
     minWidth: 300,
     maxWidth: 400,
-    frame: false,
-    transparent: true,
-    alwaysOnTop: true,
-    focusable: false,
+    // frame: false,
+    // transparent: true,
+    // alwaysOnTop: false,
+    // focusable: false,
     icon: path.join(process.env.VITE_PUBLIC, "electron-vite.svg"),
     webPreferences: {
       preload: path.join(__dirname, "preload.mjs"),
@@ -96,9 +96,7 @@ function createWindow() {
     win?.setAlwaysOnTop(false);
   });
 
-  win.on("focus", () => {
-    win?.setAlwaysOnTop(true, "screen-saver", 1);
-  });
+  win.on("focus", () => {});
 
   studio.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
 

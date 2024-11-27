@@ -10,7 +10,15 @@ export const updateStudioSettings = async ({
   values: StudioSettingsValidator;
 }) => {
   try {
-    const res = await httpClient.post(`/api/studio/${id}`, { ...values });
+    const res = await httpClient.post(
+      `/api/studio/${id}`,
+      { ...values },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     return res.data;
   } catch (err) {

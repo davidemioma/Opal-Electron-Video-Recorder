@@ -43,3 +43,11 @@ export type StudioSettings = {
   preset?: "HD" | "SD";
   audio?: string | null;
 };
+
+export type SourceType = {
+  id: string;
+  plan: "PRO" | "FREE";
+  screen?: string;
+  preset?: "HD" | "SD";
+  audio?: string;
+};

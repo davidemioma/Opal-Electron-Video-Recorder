@@ -18,14 +18,18 @@ export const fetchCurrentUser = async (clerkId: string) => {
 };
 
 export const getMediaSources = async () => {
-  const displays = await window.ipcRenderer.invoke("getSources");
+  try {
+    const displays = await window.ipcRenderer.invoke("getSources");
 
-  const enumerateDevices =
-    await window.navigator.mediaDevices.enumerateDevices();
+    const enumerateDevices =
+      await window.navigator.mediaDevices.enumerateDevices();
 
-  const audioInputs = enumerateDevices.filter(
-    (device) => device.kind === "audioinput"
-  );
+    const audioInputs = enumerateDevices.filter(
+      (device) => device.kind === "audioinput"
+    );
 
-  return { displays, audioInputs };
+    return { displays, audioInputs };
+  } catch (err) {
+    console.error("Error fetching media sources:", err);
+  }
 };

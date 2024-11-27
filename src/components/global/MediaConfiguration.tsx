@@ -1,3 +1,5 @@
+import { toast } from "sonner";
+import { Headphones, Loader2, Monitor, Settings2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -8,15 +10,20 @@ import {
   StudioSettingsScheme,
 } from "@/lib/validators/studio-settings";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { toast } from "sonner";
+import { Button } from "../ui/button";
 
 type Props = {
   profile: ProfileType;
@@ -32,9 +39,9 @@ const MediaConfiguration = ({ profile, state }: Props) => {
   const form = useForm<StudioSettingsValidator>({
     resolver: zodResolver(StudioSettingsScheme),
     defaultValues: {
-      audio: "",
-      screen: "",
-      preset: "SD",
+      audio: profile.data.studio?.mic || state.audioInputs?.[0]?.deviceId,
+      screen: profile.data.studio?.screen || state.displays?.[0]?.id,
+      preset: profile.data.studio?.preset,
     },
   });
 
@@ -76,9 +83,128 @@ const MediaConfiguration = ({ profile, state }: Props) => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="w-full h-full space-y-5"
+        className="w-full h-full relative space-y-5"
       >
-        {profile.data.firstname}
+        {isPending && (
+          <div className="absolute inset-0 w-full h-full z-50 bg-black/80 flex items-center justify-center rounded-2xl">
+            <Loader2 className="w-5 h-5 animate-spin" />
+          </div>
+        )}
+
+        <div className="w-full flex items-center gap-5">
+          <Monitor fill="#575655" color="#575655" size={36} />
+
+          <FormField
+            control={form.control}
+            name="screen"
+            render={({ field }) => (
+              <FormItem className="flex-1">
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  disabled={isPending}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a screen display" />
+                    </SelectTrigger>
+                  </FormControl>
+
+                  <SelectContent className="bg-[#171717] text-white">
+                    {state.displays.map((display, key) => (
+                      <SelectItem key={key} value={display.id}>
+                        {display.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <div className="w-full flex items-center gap-5">
+          <Headphones color="#575655" size={36} />
+
+          <FormField
+            control={form.control}
+            name="audio"
+            render={({ field }) => (
+              <FormItem className="flex-1">
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  disabled={isPending}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a audio type" />
+                    </SelectTrigger>
+                  </FormControl>
+
+                  <SelectContent className="bg-[#171717] text-white">
+                    {state.audioInputs.map((device, key) => (
+                      <SelectItem key={key} value={device.deviceId}>
+                        {device.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <div className="w-full flex items-center gap-5">
+          <Settings2 color="#575655" size={36} />
+
+          <FormField
+            control={form.control}
+            name="preset"
+            render={({ field }) => (
+              <FormItem className="flex-1">
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  disabled={isPending}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a preset" />
+                    </SelectTrigger>
+                  </FormControl>
+
+                  <SelectContent className="bg-[#171717] text-white">
+                    <SelectItem
+                      value="HD"
+                      disabled={profile.data.subscription?.plan === "FREE"}
+                    >
+                      1080p{" "}
+                      {profile.data.subscription?.plan === "FREE" &&
+                        "(Upgrade to PRO plan)."}
+                    </SelectItem>
+
+                    <SelectItem value="SD">720p</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <Button
+          type="submit"
+          className="bg-muted w-[120px] flex items-center justify-center text-black hover:bg-muted-foreground disabled:opacity-75"
+          disabled={isPending}
+        >
+          {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : "Save"}
+        </Button>
       </form>
     </Form>
   );

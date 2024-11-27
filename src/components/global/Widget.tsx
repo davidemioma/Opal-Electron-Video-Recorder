@@ -14,8 +14,6 @@ const Widget = () => {
 
   const { state, fetchMediaResources } = useMediaSources();
 
-  console.log(state);
-
   useEffect(() => {
     if (!user || !user.id) return;
 
@@ -34,6 +32,8 @@ const Widget = () => {
 
         setProfile(null);
       });
+
+    fetchMediaResources();
   }, [user]);
 
   return (

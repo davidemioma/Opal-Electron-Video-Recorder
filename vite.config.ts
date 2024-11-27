@@ -1,20 +1,25 @@
-import path from "node:path";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import path, { resolve } from "node:path";
 import tsConfigPaths from "vite-tsconfig-paths";
 import electron from "vite-plugin-electron/simple";
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  build: {
+    emptyOutDir: false,
+    manifest: true,
+    outDir: "dist",
+    rollupOptions: {
+      input: {
+        main: resolve(__dirname, "index.html"),
+        studio_main: resolve(__dirname, "studio.html"),
+        webcam_main: resolve(__dirname, "webcam.html"),
+      },
+    },
+  },
   server: {
     port: 5173,
-    // proxy: {
-    //   "/api": {
-    //     target: "http://localhost:3000",
-    //     changeOrigin: true,
-    //     rewrite: (path) => path.replace(/^\/api/, ""),
-    //   },
-    // },
   },
   plugins: [
     react(),

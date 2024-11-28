@@ -42,7 +42,7 @@ export const onStopRecording = () => {
 };
 
 export const selectSources = async (
-  source: SourceType,.
+  source: SourceType,
   videoElement: React.RefObject<HTMLVideoElement>
 ) => {
   if (!source || !source.id || !source.audio || !source.screen) {

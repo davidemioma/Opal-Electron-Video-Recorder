@@ -9,7 +9,7 @@ let videoTransferFileName: string | undefined;
 
 let mediaRecorder: MediaRecorder;
 
-let userid: string;
+let userId: string;
 
 export const startRecording = (source: SourceType) => {
   hidePluginWindow(true);
@@ -24,8 +24,6 @@ export const stopRecording = () => {
 };
 
 export const onDataAvailable = (e: BlobEvent) => {
-  alert("Running");
-
   socket.emit("video-chunks", {
     chunks: e.data,
     fileName: videoTransferFileName,
@@ -37,7 +35,7 @@ export const onStopRecording = () => {
 
   socket.emit("process-video", {
     fileName: videoTransferFileName,
-    userid,
+    userId,
   });
 };
 
@@ -71,7 +69,7 @@ export const selectSources = async (
       : false,
   });
 
-  userid = source.id;
+  userId = source.id;
 
   if (videoElement && videoElement.current) {
     videoElement.current.srcObject = stream;

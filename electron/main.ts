@@ -108,6 +108,16 @@ function createWindow() {
     studio?.setAlwaysOnTop(true, "screen-saver", 1);
   });
 
+  floatingwebcam.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
+
+  floatingwebcam.on("blur", () => {
+    floatingwebcam?.setAlwaysOnTop(false);
+  });
+
+  floatingwebcam.on("focus", () => {
+    floatingwebcam?.setAlwaysOnTop(true, "screen-saver", 1);
+  });
+
   // Make the window draggable by adding a listener to the webContents
   win.webContents.on("did-finish-load", () => {
     win?.webContents.send("main-process-message", new Date().toLocaleString());
@@ -115,6 +125,13 @@ function createWindow() {
 
   studio.webContents.on("did-finish-load", () => {
     studio?.webContents.send(
+      "main-process-message",
+      new Date().toLocaleString()
+    );
+  });
+
+  floatingwebcam.webContents.on("did-finish-load", () => {
+    floatingwebcam?.webContents.send(
       "main-process-message",
       new Date().toLocaleString()
     );

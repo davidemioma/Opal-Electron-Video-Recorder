@@ -24,6 +24,8 @@ export const stopRecording = () => {
 };
 
 export const onDataAvailable = (e: BlobEvent) => {
+  alert("Running");
+
   socket.emit("video-chunks", {
     chunks: e.data,
     fileName: videoTransferFileName,
@@ -40,7 +42,7 @@ export const onStopRecording = () => {
 };
 
 export const selectSources = async (
-  source: SourceType,
+  source: SourceType,.
   videoElement: React.RefObject<HTMLVideoElement>
 ) => {
   if (!source || !source.id || !source.audio || !source.screen) {

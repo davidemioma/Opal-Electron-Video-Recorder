@@ -48,7 +48,7 @@ export const selectSources = async (
       audio: false,
       video: {
         chromeMediaSource: "desktop",
-        chromeMediaSourceId: source.id,
+        chromeMediaSourceId: source?.screen,
         width: { ideal: source.preset === "HD" ? 1920 : 1280 },
         height: { ideal: source.preset === "HD" ? 1080 : 720 },
         frameRate: { ideal: 30 },

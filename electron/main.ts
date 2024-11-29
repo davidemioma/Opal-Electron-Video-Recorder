@@ -58,7 +58,7 @@ function createWindow() {
     minWidth: 300,
     maxWidth: 400,
     // frame: false,
-    // transparent: true,
+    // transparent: false,
     // alwaysOnTop: false,
     // focusable: false,
     icon: path.join(process.env.VITE_PUBLIC, "electron-vite.svg"),
@@ -78,7 +78,7 @@ function createWindow() {
     minWidth: 300,
     maxWidth: 400,
     // frame: false,
-    // transparent: true,
+    // transparent: false,
     // alwaysOnTop: false,
     // focusable: false,
     icon: path.join(process.env.VITE_PUBLIC, "electron-vite.svg"),
@@ -174,11 +174,13 @@ app.on("activate", () => {
 });
 
 ipcMain.handle("getSources", async () => {
-  return desktopCapturer.getSources({
-    thumbnailSize: { height: 100, width: 150 },
+  const sources = await desktopCapturer.getSources({
+    thumbnailSize: { height: 150, width: 150 },
     fetchWindowIcons: true,
-    types: ["window", "screen"],
+    types: ["screen", "window"],
   });
+
+  return sources;
 });
 
 ipcMain.on("media-sources", (event, payload) => {

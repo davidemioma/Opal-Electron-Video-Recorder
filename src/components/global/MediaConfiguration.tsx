@@ -1,4 +1,6 @@
 import { toast } from "sonner";
+import { useEffect } from "react";
+import { Button } from "../ui/button";
 import { Headphones, Loader2, Monitor, Settings2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
@@ -23,7 +25,6 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { Button } from "../ui/button";
 
 type Props = {
   profile: ProfileType;
@@ -63,6 +64,22 @@ const MediaConfiguration = ({ profile, state }: Props) => {
       return toast.success(data.message);
     },
   });
+
+  useEffect(() => {
+    if (profile?.data?.studio) {
+      const { screen, mic, preset } = profile.data.studio;
+
+      if (screen && mic) {
+        window.ipcRenderer.send("media-sources", {
+          id: profile.data.id,
+          plan: profile.data.subscription?.plan,
+          screen,
+          mic,
+          preset,
+        });
+      }
+    }
+  }, [profile]);
 
   const onSubmit = (values: StudioSettingsValidator) => {
     if (!profile.data.id) return;

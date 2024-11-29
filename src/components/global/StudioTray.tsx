@@ -9,8 +9,6 @@ import {
 } from "@/lib/actions/recorder";
 
 const StudioTray = () => {
-  const initialTime = new Date();
-
   const [count, setCount] = useState(0);
 
   const [preview, setPreview] = useState(false);
@@ -44,7 +42,7 @@ const StudioTray = () => {
   };
 
   useEffect(() => {
-    if (!source || !source.screen) return;
+    if (!source) return;
 
     selectSources(source, videoRef);
 
@@ -55,6 +53,8 @@ const StudioTray = () => {
 
   useEffect(() => {
     if (!recording) return;
+
+    const initialTime = new Date();
 
     const interval = setInterval(() => {
       const time = count + (new Date().getTime() - initialTime.getTime());
@@ -81,15 +81,15 @@ const StudioTray = () => {
     }, 1);
 
     () => clearInterval(interval);
-  }, [recording]);
+  }, [recording, source, count]);
 
   return (
     <>
       {source && (
-        <div className="h-screen draggable flex flex-col gap-5">
+        <div className="h-[200px] draggable flex flex-col gap-5">
           {preview && (
             <video
-              className="w-full border-2 border-muted-foreground"
+              className="w-1/2 border-2 border-muted-foreground aspect-video"
               ref={videoRef}
               autoPlay
             />
@@ -104,7 +104,7 @@ const StudioTray = () => {
               )}
             >
               {recording && (
-                <span className="absolute top-1/2 -right-16 transform -translate-y-1/2">
+                <span className="absolute top-1/2 text-white -right-16 ml-3 transform -translate-y-1/2">
                   {timer}
                 </span>
               )}

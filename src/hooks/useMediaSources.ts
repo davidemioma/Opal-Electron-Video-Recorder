@@ -18,16 +18,17 @@ const useMediaSources = () => {
 
     getMediaSources()
       .then((data) => {
-        setDisplays(data.displays);
+        setDisplays(data?.displays);
 
-        setAudioInputs(
-          data.audioInputs.map((input) => ({
-            deviceId: input.deviceId,
-            type: input.kind,
-            label: input.label,
-            groupId: input.groupId,
-          }))
-        );
+        data?.audioInputs &&
+          setAudioInputs(
+            data?.audioInputs?.map((input) => ({
+              deviceId: input.deviceId,
+              type: input.kind,
+              label: input.label,
+              groupId: input.groupId,
+            }))
+          );
       })
       .catch((err) => {
         setError(`Something went wrong! ${err}`);

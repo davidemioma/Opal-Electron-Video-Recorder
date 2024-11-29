@@ -43,50 +43,50 @@ export const selectSources = async (
   source: SourceType,
   videoElement: React.RefObject<HTMLVideoElement>
 ) => {
-  if (!source || !source.id || !source.audio || !source.screen) {
-    return;
+  if (source && source.id && source.audio && source.screen) {
+    const constraints = {
+      audio: false,
+      video: {
+        chromeMediaSource: "desktop",
+        chromeMediaSourceId: source.id,
+        width: { ideal: source.preset === "HD" ? 1920 : 1280 },
+        height: { ideal: source.preset === "HD" ? 1080 : 720 },
+        frameRate: { ideal: 30 },
+      },
+    };
+
+    const stream: MediaStream = await navigator.mediaDevices.getUserMedia(
+      constraints
+    );
+
+    const audioStream = await navigator.mediaDevices.getUserMedia({
+      video: false,
+      audio: source.audio
+        ? {
+            deviceId: { exact: source.audio },
+          }
+        : false,
+    });
+
+    userId = source.id;
+
+    if (videoElement && videoElement.current) {
+      videoElement.current.srcObject = stream;
+
+      await videoElement.current.play();
+    }
+
+    const combinedStream = new MediaStream([
+      ...stream.getTracks(),
+      ...audioStream.getTracks(),
+    ]);
+
+    mediaRecorder = new MediaRecorder(combinedStream, {
+      mimeType: "video/webm; codecs=vp9",
+    });
+
+    mediaRecorder.ondataavailable = onDataAvailable;
+
+    mediaRecorder.onstop = onStopRecording;
   }
-
-  const constraints = {
-    audio: false,
-    video: {
-      chromeMediaSource: "desktop",
-      chromeMediaSourceId: source.screen,
-      width: { ideal: source.preset === "HD" ? 1920 : 1280 },
-      height: { ideal: source.preset === "HD" ? 1080 : 720 },
-      frameRate: { ideal: 30 },
-    },
-  };
-
-  const stream = await navigator.mediaDevices.getUserMedia(constraints);
-
-  const audioStream = await navigator.mediaDevices.getUserMedia({
-    video: false,
-    audio: source.audio
-      ? {
-          deviceId: { exact: source.audio },
-        }
-      : false,
-  });
-
-  userId = source.id;
-
-  if (videoElement && videoElement.current) {
-    videoElement.current.srcObject = stream;
-
-    await videoElement.current.play();
-  }
-
-  const combinedStream = new MediaStream([
-    ...stream.getTracks(),
-    ...audioStream.getTracks(),
-  ]);
-
-  mediaRecorder = new MediaRecorder(combinedStream, {
-    mimeType: "video/webm; codecs=vp9",
-  });
-
-  mediaRecorder.ondataavailable = onDataAvailable;
-
-  mediaRecorder.onstop = onStopRecording;
 };

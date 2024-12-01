@@ -44,20 +44,34 @@ export const selectSources = async (
   videoElement: React.RefObject<HTMLVideoElement>
 ) => {
   if (source && source.id && source.audio && source.screen) {
+    // const constraints = {
+    //   audio: false,
+    //   video: {
+    //     chromeMediaSource: "desktop",
+    //     chromeMediaSourceId: source?.screen,
+    //     width: { ideal: source.preset === "HD" ? 1920 : 1280 },
+    //     height: { ideal: source.preset === "HD" ? 1080 : 720 },
+    //     frameRate: { ideal: 30 },
+    //   },
+    // };
+
     const constraints = {
       audio: false,
       video: {
-        chromeMediaSource: "desktop",
-        chromeMediaSourceId: source?.screen,
-        width: { ideal: source.preset === "HD" ? 1920 : 1280 },
-        height: { ideal: source.preset === "HD" ? 1080 : 720 },
-        frameRate: { ideal: 30 },
+        mandatory: {
+          chromeMediaSource: "desktop",
+          chromeMediaSourceId: source.screen,
+          minWidth: source.preset === "HD" ? 1920 : 1280,
+          maxWidth: source.preset === "HD" ? 1920 : 1280,
+          minHeight: source.preset === "HD" ? 1080 : 720,
+          maxHeight: source.preset === "HD" ? 1080 : 720,
+          maxFrameRate: 30,
+        },
       },
     };
 
-    const stream: MediaStream = await navigator.mediaDevices.getUserMedia(
-      constraints
-    );
+    //@ts-ignore
+    const stream = await navigator.mediaDevices.getUserMedia(constraints);
 
     const audioStream = await navigator.mediaDevices.getUserMedia({
       video: false,
